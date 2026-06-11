@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { FlatList, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Entypo } from '@react-native-vector-icons/entypo';
 import { useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -394,7 +394,7 @@ function normalizeOptionsLikePayload(raw: any): NormalizedOptionsPayload {
 console.log(isStockSelected);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center', }}>
       <View 
         style={{
           flexDirection: 'row', 
@@ -522,14 +522,13 @@ console.log(isStockSelected);
           <Text style={[styles.positive, styles.maxStyle, { color: '#fff' }]}>$0.00</Text>
         </View>
       </View> </>: null}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     padding: 20,
     backgroundColor: '#0B0D10'
   },
