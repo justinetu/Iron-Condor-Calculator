@@ -246,6 +246,7 @@ export default function Chart() {
                   </View>
                 );
             }}
+            />
     </View>
   );
 }
