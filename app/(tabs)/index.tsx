@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";;
 import { RootStackParamList } from '../types';
+import { Picker } from '@react-native-picker/picker';
 
 type StockRow = {
   symbol: string;
@@ -394,7 +395,7 @@ function normalizeOptionsLikePayload(raw: any): NormalizedOptionsPayload {
 console.log(isStockSelected);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center', }}>
+    <ScrollView style={styles.scrollView} contentContainerStyle={[styles.contentContainer, {  alignItems: 'center', paddingBottom: 90 }]}>
       <View 
         style={{
           flexDirection: 'row', 
@@ -413,9 +414,11 @@ console.log(isStockSelected);
           placeholderTextColor='#A1A7B3'
         />
       </View>
-      { isSearchingStocks && !isStockSelected ? <FlatList 
+      { isSearchingStocks && !isStockSelected ? 
+      <FlatList 
         style={{ backgroundColor: '#0B0D10', minWidth: q ? '99%': 'auto' }}
         data={filtered}
+        scrollEnabled={false}
         keyExtractor={(item)=> item.symbol}
         renderItem={({ item }) => (
           <TouchableOpacity 
@@ -471,15 +474,74 @@ console.log(isStockSelected);
       <View style={styles.condorView}>
         <Text style={styles.cardText}>Iron Condor Setup</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          <View style={styles.putView}>
-            <View><Text style={styles.callPutTxt}>PUT SIDE</Text></View>
+          
+          <View style={{ minWidth: '40%' }}> 
+            <View style={styles.putView}>
+              <View><Text style={styles.callPutTxt}>PUT SIDE</Text></View>
+            </View>
+            <View style={styles.strikePriceSelection}>
+              <Text style={styles.strikeTxt}>Buy Strike</Text>
+              <Picker style={{ width: 150, top: -70 }}>
+                <Picker.Item value="Java" label="Java"/>
+                <Picker.Item value="Java" label="Java"/>
+                <Picker.Item value="Java" label="Java"/>
+              </Picker>
+
+              <View style={{ alignItems: 'center', top: -70 }}>
+                <Text style={styles.strikeTxt}>Sell Strike</Text>
+                <Picker style={{ width: 150, top: -70 }}>
+                  <Picker.Item value="Java" label="Java"/>
+                  <Picker.Item value="Java" label="Java"/>
+                  <Picker.Item value="Java" label="Java"/>
+                </Picker>
+              </View>
+            </View>
           </View>
-          <View style={styles.callView}>
-            <View><Text style={styles.callPutTxt}>CALL SIDE</Text></View>
+          
+          <View style={{ minWidth: '40%' }}>
+            <View style={styles.callView}>
+              <View><Text style={styles.callPutTxt}>CALL SIDE</Text></View>
+            </View>
+            <View style={styles.strikePriceSelection}>
+              <Text style={styles.strikeTxt}>Buy Strike</Text>
+              <Picker style={{ width: 150, top: -70 }}>
+                <Picker.Item value="Java" label="Java"/>
+                <Picker.Item value="Java" label="Java"/>
+                <Picker.Item value="Java" label="Java"/>
+              </Picker>
+
+              <View style={{ alignItems: 'center', top: -70 }}>
+                <Text style={styles.strikeTxt}>Sell Strike</Text>
+                <Picker style={{ width: 150, top: -70 }}>
+                  <Picker.Item value="Java" label="Java"/>
+                  <Picker.Item value="Java" label="Java"/>
+                  <Picker.Item value="Java" label="Java"/>
+                </Picker>
+              </View>
+            </View>
           </View>
         </View>
+        
+        <View style={{ alignItems: 'center', top: -140 }}>
+          <Text style={styles.strikeTxt}>Expiration Date</Text>
+          {/* <Picker style={{ width: 150, top: -70 }}>
+            <Picker.Item value="Java" label="Java"/>
+            <Picker.Item value="Java" label="Java"/>
+            <Picker.Item value="Java" label="Java"/>
+          </Picker> */}
+          <FlatList 
+            data={[`June 19th '26, June 26th '26, July 3rd '26`]}
+            horizontal
+            scrollEnabled
+            showsHorizontalScrollIndicator={false}
+            // snapToInterval={ITEM_WIDTH}
+            decelerationRate="fast"
+            renderItem={({item}) => <Text>{item}</Text>}
+          />
+        </View>
+       
       </View>
-      <View style={styles.condorView}>
+      <View style={styles.resultsView}>
         <Text 
           style={[styles.cardText, 
           { borderBottomWidth: 0.5,
@@ -527,10 +589,18 @@ console.log(isStockSelected);
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
+    backgroundColor: '#0B0D10',
+  },
+  contentContainer: {
     padding: 20,
-    backgroundColor: '#0B0D10'
+    // Add flexGrow: 1 if you want content to fill the screen even when short
+    flexGrow: 1, 
+  },
+  picker: {
+    width: 10,
+    height: 10,
   },
   maxStyle: {
     position: 'absolute',
@@ -581,26 +651,44 @@ const styles = StyleSheet.create({
     backgroundColor: '#151A21',
     borderRadius: 8,
     minWidth: '100%',
-    minHeight: '35%'
+    height: '60%',
+    
+  },
+  resultsView: {
+    marginTop: 30,
+    backgroundColor: '#151A21',
+    borderRadius: 8,
+    minWidth: '100%',
+    height: '25%'
   },
   putView: {
     backgroundColor: '#C0392B',
     borderRadius: 5,
-    minWidth: '40%',
-    minHeight: '15%',
+    // minWidth: 80,
+    //minHeight: '15%',
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  strikePriceSelection: {
+    alignItems: 'center', 
+    marginTop: 20
   },
   callView: {
     backgroundColor: '#3498DB',
     borderRadius: 5,
-    minWidth: '40%',
-    minHeight: '15%',
+    // minWidth: '40%',
+    // minHeight: '15%',
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center'
   },
   callPutTxt: {
     color: 'black',
+    fontWeight: 'bold'
+  },
+  strikeTxt: {
+    color: '#fff',
     fontWeight: 'bold'
   }
 });
